@@ -1,5 +1,7 @@
 package smartlibrary;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -16,7 +18,7 @@ public class Main {
     }
 
     private void run() {
-        System.out.println("Smart Library System (Java + BST + Stack)");
+        System.out.println("Smart Library System (Java + BST + Stack + CSV)");
 
         boolean running = true;
         while (running) {
@@ -25,14 +27,17 @@ public class Main {
 
             switch (choice) {
                 case 1 -> handleAddBook();
-                case 2 -> handleSearchBook();
-                case 3 -> handleBorrowBook();
-                case 4 -> library.viewHistory();
-                case 5 -> {
+                case 2 -> handleViewAllBooks();
+                case 3 -> handleSearchBook();
+                case 4 -> handleBorrowBook();
+                case 5 -> handleReturnLatestBorrowed();
+                case 6 -> handleViewLendingRecords();
+                case 7 -> library.viewHistory();
+                case 8 -> {
                     System.out.println("Exiting program.");
                     running = false;
                 }
-                default -> System.out.println("Invalid option. Please choose 1-5.");
+                default -> System.out.println("Invalid option. Please choose 1-8.");
             }
         }
     }
@@ -41,10 +46,13 @@ public class Main {
         System.out.println();
         System.out.println("==== Smart Library Menu ====");
         System.out.println("1. Add Book");
-        System.out.println("2. Search Book");
-        System.out.println("3. Borrow Book");
-        System.out.println("4. View History");
-        System.out.println("5. Exit");
+        System.out.println("2. View All Books");
+        System.out.println("3. Search Book");
+        System.out.println("4. Borrow Book");
+        System.out.println("5. Return Latest Borrowed Book");
+        System.out.println("6. View Lending Records");
+        System.out.println("7. View Borrowing History");
+        System.out.println("8. Exit");
     }
 
     private void handleAddBook() {
@@ -72,14 +80,56 @@ public class Main {
         System.out.println("Book found: " + book);
     }
 
+    private void handleViewAllBooks() {
+        List<Book> books = library.getAllBooks();
+        if (books.isEmpty()) {
+            System.out.println("No books in catalogue.");
+            return;
+        }
+
+        System.out.println("All Books in Catalogue (ISBN order):");
+        for (int i = 0; i < books.size(); i++) {
+            System.out.println((i + 1) + ". " + books.get(i));
+        }
+    }
+
     private void handleBorrowBook() {
         int isbn = readInt("Enter ISBN to borrow: ");
-        boolean borrowed = library.borrowBook(isbn);
+        String userName = readNonEmptyLine("Enter borrower name: ");
+        String userId = readNonEmptyLine("Enter borrower ID: ");
+        int lendPeriodDays = readPositiveInt("Enter lending period in days: ");
+
+        boolean borrowed = library.borrowBook(isbn, userName, userId, lendPeriodDays);
 
         if (borrowed) {
             System.out.println("Book borrowed and moved to history stack.");
         } else {
-            System.out.println("Book not found in catalogue.");
+            System.out.println("Borrow failed. Book not found or invalid lending period.");
+        }
+    }
+
+    private void handleViewLendingRecords() {
+        List<LendingRecord> records = library.getLendingRecords();
+        if (records.isEmpty()) {
+            System.out.println("No lending records found.");
+            return;
+        }
+
+        System.out.println("Lending Records:");
+        LocalDateTime now = LocalDateTime.now();
+        for (int i = 0; i < records.size(); i++) {
+            LendingRecord record = records.get(i);
+            long exceededDays = record.getExceededDays(now);
+            System.out.println((i + 1) + ". " + record + " | ExceededNow=" + exceededDays);
+        }
+    }
+
+    private void handleReturnLatestBorrowed() {
+        Book returned = library.returnLatestBorrowed();
+        if (returned == null) {
+            System.out.println("No borrowed books in history to return.");
+        } else {
+            System.out.println("Returned: " + returned);
         }
     }
 
@@ -92,6 +142,16 @@ public class Main {
             } catch (NumberFormatException ex) {
                 System.out.println("Invalid input. Please enter a valid integer.");
             }
+        }
+    }
+
+    private int readPositiveInt(String prompt) {
+        while (true) {
+            int value = readInt(prompt);
+            if (value > 0) {
+                return value;
+            }
+            System.out.println("Value must be greater than 0.");
         }
     }
 

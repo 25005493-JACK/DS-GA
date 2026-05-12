@@ -15,7 +15,6 @@ class BorrowHistoryStack {
         }
         return history.pop();
     }
-
     boolean isEmpty() {
         return history.isEmpty();
     }
@@ -25,7 +24,6 @@ class BorrowHistoryStack {
             System.out.println("Borrow history is empty.");
             return;
         }
-
         System.out.println("Borrowing History (Most recent first):");
         for (int i = history.size() - 1; i >= 0; i--) {
             Book book = history.get(i);

@@ -1,5 +1,8 @@
 package smartlibrary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class BookBST {
     private BookNode root;
 
@@ -16,7 +19,6 @@ class BookBST {
         if (book.getIsbn() == currentIsbn) {
             return false;
         }
-
         if (book.getIsbn() < currentIsbn) {
             if (current.getLeft() == null) {
                 current.setLeft(new BookNode(book));
@@ -24,7 +26,6 @@ class BookBST {
             }
             return insertRecursive(current.getLeft(), book);
         }
-
         if (current.getRight() == null) {
             current.setRight(new BookNode(book));
             return true;
@@ -40,12 +41,10 @@ class BookBST {
         if (node == null) {
             return null;
         }
-
         int nodeIsbn = node.getBook().getIsbn();
         if (isbn == nodeIsbn) {
             return node.getBook();
         }
-
         if (isbn < nodeIsbn) {
             return searchRecursive(node.getLeft(), isbn);
         }
@@ -65,26 +64,21 @@ class BookBST {
         if (node == null) {
             return null;
         }
-
         int nodeIsbn = node.getBook().getIsbn();
         if (isbn < nodeIsbn) {
             node.setLeft(removeRecursive(node.getLeft(), isbn));
             return node;
         }
-
         if (isbn > nodeIsbn) {
             node.setRight(removeRecursive(node.getRight(), isbn));
             return node;
         }
-
         if (node.getLeft() == null) {
             return node.getRight();
         }
-
         if (node.getRight() == null) {
             return node.getLeft();
         }
-
         BookNode successor = findMin(node.getRight());
         BookNode merged = new BookNode(successor.getBook());
         merged.setLeft(node.getLeft());
@@ -98,6 +92,21 @@ class BookBST {
             current = current.getLeft();
         }
         return current;
+    }
+
+    List<Book> toInOrderList() {
+        List<Book> books = new ArrayList<>();
+        toInOrderListRecursive(root, books);
+        return books;
+    }
+
+    private void toInOrderListRecursive(BookNode node, List<Book> books) {
+        if (node == null) {
+            return;
+        }
+        toInOrderListRecursive(node.getLeft(), books);
+        books.add(node.getBook());
+        toInOrderListRecursive(node.getRight(), books);
     }
 
     boolean isEmpty() {
