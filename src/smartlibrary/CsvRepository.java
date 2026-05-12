@@ -22,7 +22,10 @@ class CsvRepository {
             if (line.isEmpty()) {
                 continue;
             }
-            String[] cols = parseCsvLine(line, 3);
+            String[] cols = parseCsvLine(line);
+            if (cols.length != 3) {
+                throw new IllegalStateException("Invalid books CSV row: " + line);
+            }
             books.add(new Book(Integer.parseInt(cols[0]), cols[1], cols[2]));
         }
         return books;
@@ -51,7 +54,7 @@ class CsvRepository {
     }
 
     List<LendingRecord> loadLendingRecords() {
-        ensureFileWithHeader(LENDINGS_FILE, "userName,userId,bookTitle,isbn,lendTime,lendPeriodDays,dueTime,returnTime");
+        ensureFileWithHeader(LENDINGS_FILE, "userName,userId,bookTitle,authorName,isbn,lendTime,lendPeriodDays,dueTime,returnTime");
         List<LendingRecord> records = new ArrayList<>();
         List<String> lines = readAllLinesSafe(LENDINGS_FILE);
         for (int i = 1; i < lines.size(); i++) {
@@ -59,7 +62,11 @@ class CsvRepository {
             if (line.isEmpty()) {
                 continue;
             }
-            records.add(LendingRecord.fromCsvRow(parseCsvLine(line, 8)));
+            String[] cols = parseCsvLine(line);
+            if (cols.length != 8 && cols.length != 9) {
+                throw new IllegalStateException("Invalid lending CSV row: " + line);
+            }
+            records.add(LendingRecord.fromCsvRow(cols));
         }
         return records;
     }
@@ -71,7 +78,7 @@ class CsvRepository {
                 StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING
         )) {
-            writer.write("userName,userId,bookTitle,isbn,lendTime,lendPeriodDays,dueTime,returnTime");
+            writer.write("userName,userId,bookTitle,authorName,isbn,lendTime,lendPeriodDays,dueTime,returnTime");
             writer.newLine();
             for (LendingRecord record : records) {
                 writer.write(toCsvLine(record.toCsvRow()));
@@ -130,7 +137,7 @@ class CsvRepository {
         return "\"" + safe.replace("\"", "\"\"") + "\"";
     }
 
-    private String[] parseCsvLine(String line, int expectedColumns) {
+    private String[] parseCsvLine(String line) {
         List<String> cols = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         boolean inQuotes = false;
@@ -152,10 +159,6 @@ class CsvRepository {
             }
         }
         cols.add(current.toString());
-
-        if (cols.size() != expectedColumns) {
-            throw new IllegalStateException("Invalid CSV row: " + line);
-        }
 
         return cols.toArray(new String[0]);
     }

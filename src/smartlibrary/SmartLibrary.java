@@ -2,6 +2,7 @@ package smartlibrary;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class SmartLibrary implements LibraryADT {
                 userName,
                 userId,
                 borrowed.getTitle(),
+                borrowed.getAuthor(),
                 borrowed.getIsbn(),
                 lendTime,
                 lendPeriodDays,
@@ -106,6 +108,7 @@ public class SmartLibrary implements LibraryADT {
 
         lendingRecords.clear();
         lendingRecords.addAll(csvRepository.loadLendingRecords());
+        rebuildBorrowHistoryFromRecords();
     }
 
     private void persistBooks() {
@@ -123,6 +126,21 @@ public class SmartLibrary implements LibraryADT {
                 record.markReturned(LocalDateTime.now());
                 return;
             }
+        }
+    }
+
+    private void rebuildBorrowHistoryFromRecords() {
+        borrowHistory.clear();
+        List<LendingRecord> active = new ArrayList<>();
+        for (LendingRecord record : lendingRecords) {
+            if (record.getReturnTime() == null) {
+                active.add(record);
+            }
+        }
+
+        active.sort(Comparator.comparing(LendingRecord::getLendTime));
+        for (LendingRecord record : active) {
+            borrowHistory.push(new Book(record.getIsbn(), record.getBookTitle(), record.getAuthorName()));
         }
     }
 }

@@ -9,6 +9,7 @@ public class LendingRecord {
     private final String userName;
     private final String userId;
     private final String bookTitle;
+    private final String authorName;
     private final int isbn;
     private final LocalDateTime lendTime;
     private final int lendPeriodDays;
@@ -19,6 +20,7 @@ public class LendingRecord {
             String userName,
             String userId,
             String bookTitle,
+            String authorName,
             int isbn,
             LocalDateTime lendTime,
             int lendPeriodDays,
@@ -28,6 +30,7 @@ public class LendingRecord {
         this.userName = userName;
         this.userId = userId;
         this.bookTitle = bookTitle;
+        this.authorName = authorName;
         this.isbn = isbn;
         this.lendTime = lendTime;
         this.lendPeriodDays = lendPeriodDays;
@@ -38,6 +41,7 @@ public class LendingRecord {
     public String getUserName() { return userName; }
     public String getUserId() { return userId; }
     public String getBookTitle() { return bookTitle; }
+    public String getAuthorName() { return authorName; }
     public int getIsbn() { return isbn; }
     public LocalDateTime getLendTime() { return lendTime; }
     public int getLendPeriodDays() { return lendPeriodDays; }
@@ -62,6 +66,7 @@ public class LendingRecord {
                 userName,
                 userId,
                 bookTitle,
+                authorName,
                 String.valueOf(isbn),
                 lendTime.format(DATE_TIME_FORMATTER),
                 String.valueOf(lendPeriodDays),
@@ -74,12 +79,22 @@ public class LendingRecord {
         String userName = cols[0];
         String userId = cols[1];
         String bookTitle = cols[2];
-        int isbn = Integer.parseInt(cols[3]);
-        LocalDateTime lendTime = LocalDateTime.parse(cols[4], DATE_TIME_FORMATTER);
-        int lendPeriodDays = Integer.parseInt(cols[5]);
-        LocalDateTime dueTime = LocalDateTime.parse(cols[6], DATE_TIME_FORMATTER);
-        LocalDateTime returnTime = cols[7].isBlank() ? null : LocalDateTime.parse(cols[7], DATE_TIME_FORMATTER);
-        return new LendingRecord(userName, userId, bookTitle, isbn, lendTime, lendPeriodDays, dueTime, returnTime);
+        if (cols.length == 8) {
+            int isbn = Integer.parseInt(cols[3]);
+            LocalDateTime lendTime = LocalDateTime.parse(cols[4], DATE_TIME_FORMATTER);
+            int lendPeriodDays = Integer.parseInt(cols[5]);
+            LocalDateTime dueTime = LocalDateTime.parse(cols[6], DATE_TIME_FORMATTER);
+            LocalDateTime returnTime = cols[7].isBlank() ? null : LocalDateTime.parse(cols[7], DATE_TIME_FORMATTER);
+            return new LendingRecord(userName, userId, bookTitle, "Unknown", isbn, lendTime, lendPeriodDays, dueTime, returnTime);
+        }
+
+        String authorName = cols[3];
+        int isbn = Integer.parseInt(cols[4]);
+        LocalDateTime lendTime = LocalDateTime.parse(cols[5], DATE_TIME_FORMATTER);
+        int lendPeriodDays = Integer.parseInt(cols[6]);
+        LocalDateTime dueTime = LocalDateTime.parse(cols[7], DATE_TIME_FORMATTER);
+        LocalDateTime returnTime = cols[8].isBlank() ? null : LocalDateTime.parse(cols[8], DATE_TIME_FORMATTER);
+        return new LendingRecord(userName, userId, bookTitle, authorName, isbn, lendTime, lendPeriodDays, dueTime, returnTime);
     }
 
     @Override
@@ -90,6 +105,7 @@ public class LendingRecord {
         return "User=" + userName
                 + " (" + userId + ")"
                 + " | Book=" + bookTitle
+                + " | Author=" + authorName
                 + " | ISBN=" + isbn
                 + " | Lend=" + lendTime
                 + " | PeriodDays=" + lendPeriodDays

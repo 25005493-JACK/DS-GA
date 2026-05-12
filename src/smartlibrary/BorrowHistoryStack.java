@@ -15,6 +15,11 @@ class BorrowHistoryStack {
         }
         return history.pop();
     }
+
+    void clear() {
+        history.clear();
+    }
+
     boolean isEmpty() {
         return history.isEmpty();
     }

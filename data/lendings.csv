@@ -1,3 +1,11 @@
-userName,userId,bookTitle,isbn,lendTime,lendPeriodDays,dueTime,returnTime
-Ali,A01,DSA,2001,2026-05-12T22:54:53.3968026,14,2026-05-26T22:54:53.3968026,2026-05-12T22:54:53.4182029
-Jack,0,MLBB,0,2026-05-12T23:18:42.1522895,14,2026-05-26T23:18:42.1522895,2026-05-12T23:19:26.5261083
+﻿"userName","userId","bookTitle","authorName","isbn","lendTime","lendPeriodDays","dueTime","returnTime"
+"Ali Rahman","S10001","Introduction to Data Structures","Wei Ming","1001","2026-04-20T10:00:00","14","2026-05-04T10:00:00","2026-05-03T11:00:00"
+"Nur Aina","S10002","Algorithms in Practice","Siti Aisyah","1002","2026-04-22T09:30:00","10","2026-05-02T09:30:00","2026-05-05T16:00:00"
+"John Wong","S10003","Object Oriented Programming","Daniel Tan","1003","2026-04-25T14:15:00","7","2026-05-02T14:15:00",""
+"Siti Mariam","S10004","Database Systems Fundamentals","Nur Iman","1004","2026-04-26T08:45:00","14","2026-05-10T08:45:00","2026-05-09T13:20:00"
+"Kumar Raj","S10005","Computer Networks Basics","Amirul Hakim","1005","2026-04-27T12:10:00","5","2026-05-02T12:10:00",""
+"Mei Yee","S10006","Operating Systems Concepts","Mei Ling","1006","2026-04-28T11:00:00","14","2026-05-12T11:00:00","2026-05-12T09:00:00"
+"Adam Firdaus","S10007","Software Engineering Principles","Jonathan Lee","1007","2026-04-29T15:40:00","3","2026-05-02T15:40:00","2026-05-04T10:00:00"
+"Hui Xin","S10008","Discrete Mathematics for CS","Hana Sofia","1008","2026-04-30T16:25:00","14","2026-05-14T16:25:00",""
+"Farah Nabilah","S10009","Web Development Essentials","Faris Zulkifli","1009","2026-05-01T10:50:00","7","2026-05-08T10:50:00","2026-05-07T09:40:00"
+"Irfan Aziz","S10010","Artificial Intelligence Primer","Sarah Lim","1010","2026-05-02T13:35:00","14","2026-05-16T13:35:00","2026-05-12T23:53:51.1457612"
