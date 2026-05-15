@@ -1,6 +1,7 @@
 package smartlibrary;
 
 /**
+ * Wei Feng
  * LibraryUser represents a verified borrower identity mapping.
  *
  * This is stored in users.csv to prevent inconsistent pairs such as:

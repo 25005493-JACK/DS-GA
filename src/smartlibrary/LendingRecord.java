@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
+ * Janessa
  * LendingRecord represents one lending transaction row.
  *
  * This class maps directly to one CSV row in lendings.csv.

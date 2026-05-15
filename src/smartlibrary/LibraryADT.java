@@ -3,6 +3,7 @@ package smartlibrary;
 import java.util.List;
 
 /**
+ * Isaac
  * LibraryADT defines the public contract of the library system.
  *
  * This interface is used to enforce information hiding:

@@ -3,6 +3,7 @@ package smartlibrary;
 import java.util.Stack;
 
 /**
+ * Xin Yi
  * BorrowHistoryStack stores currently borrowed books in LIFO order.
  *
  * LIFO means the most recently borrowed book is returned first, matching

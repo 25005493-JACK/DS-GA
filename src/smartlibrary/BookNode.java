@@ -1,6 +1,7 @@
 package smartlibrary;
 
 /**
+ * Ying Chen
  * Internal BST node that stores one Book and references to child nodes.
  *
  * This class is package-private and only used by BookBST.

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
+ * Wei Feng + Xin Yi
  * Main is the console UI entry point.
  *
  * It handles:

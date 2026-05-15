@@ -1,6 +1,7 @@
 package smartlibrary;
 
 /**
+ * Ying Chen
  * Immutable domain model representing a single book entity.
  *
  * Book is intentionally immutable so once created, its key properties

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Isaac
  * SmartLibrary is the concrete implementation of LibraryADT.
  *
  * It orchestrates three responsibilities:
