@@ -30,18 +30,19 @@ This project demonstrates:
 3. Search Book
 4. Borrow Book
 5. Return Latest Borrowed Book
-6. View Lending Records
-7. View Borrowing History
-8. Exit
+6. Return Specific Borrowed Book (by ISBN)
+7. View Lending Records
+8. View Borrowing History
+9. Exit
 
 ## Business Rules
 
 ### Borrowing
 - Book must exist in catalogue.
 - Lending period must be greater than 0.
-- Borrower identity must be consistent:
-- one `userId` cannot map to multiple names
-- one `userName` cannot map to multiple IDs
+- Borrower identity must already exist in `users.csv`.
+- If `userName` + `userId` pair is wrong or not registered, borrowing is rejected.
+- Wrong/unknown pairs are not saved to `users.csv`.
 
 ### Returning
 - Uses LIFO stack rule (latest borrowed is returned first).
@@ -103,7 +104,7 @@ Use:
 Mechanism:
 - Reads target ISBN.
 - Calls `library.searchBook(isbn)`.
-- Prints matched book details or not found message.
+- Prints matched book in table format or not found message.
 
 #### `handleViewAllBooks()`
 Use:
@@ -118,8 +119,17 @@ Use:
 - Performs borrowing transaction with borrower validation.
 Mechanism:
 - Reads ISBN, borrower name, borrower ID, lending period.
+- Checks whether ISBN exists first for accurate failure reason.
 - Calls `library.borrowBook(...)`.
-- Prints success or validation failure message.
+- Prints success or exact failure message (book not found vs borrower mismatch).
+
+#### `handleReturnSpecificBorrowedBook()`
+Use:
+- Returns a chosen active borrowed book by ISBN.
+Mechanism:
+- Reads target ISBN.
+- Calls `library.returnBookByIsbn(isbn)`.
+- If successful, prints returned book with borrower name and ID.
 
 #### `handleViewLendingRecords()`
 Use:
@@ -210,6 +220,15 @@ Mechanism:
 - Marks latest active lending of same ISBN as returned.
 - Persists books and lendings.
 
+#### `returnBookByIsbn(int isbn)`
+Use:
+- Return a specific active borrowed book by ISBN.
+Mechanism:
+- Removes most recent matching ISBN from borrow stack.
+- Re-inserts book to BST.
+- Marks latest active lending of same ISBN as returned.
+- Persists books and lendings.
+
 #### `viewHistory()`
 Use:
 - Print active borrow stack.
@@ -274,6 +293,15 @@ Mechanism:
 - Marks latest active lending returned with current time.
 - Saves books + lendings.
 
+#### `returnBookByIsbn(int isbn)`
+Use:
+- Return a specific borrowed book.
+Mechanism:
+- Removes target ISBN from active stack.
+- Inserts returned book back to catalogue.
+- Marks matching active lending as returned.
+- Saves books + lendings.
+
 #### `loadFromCsv()`
 Use:
 - Full state hydration.
@@ -306,11 +334,11 @@ Mechanism:
 
 #### `registerOrValidateUser(String userName, String userId)`
 Use:
-- Enforce identity consistency rule.
+- Validate borrower identity against existing users.
 Mechanism:
 - Rejects conflicting name/id pairs.
 - Accepts existing exact pair.
-- Adds new valid pair and persists users file.
+- Rejects unknown pair (no auto-registration).
 
 #### `syncUsersFromLendingRecords()`
 Use:
@@ -367,6 +395,14 @@ Use:
 - Retrieves most recent active borrow.
 Mechanism:
 - Pops top element; returns `null` if empty.
+
+#### `removeByIsbn(int isbn)`
+Use:
+- Removes a specific active borrowed book from stack.
+Mechanism:
+- Scans stack from top to bottom.
+- Removes first matched ISBN (most recent match).
+- Returns removed book, or `null` if not found.
 
 #### `clear()`
 Use:
