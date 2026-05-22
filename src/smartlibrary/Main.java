@@ -51,13 +51,14 @@ public class Main {
                 case 3 -> handleSearchBook();
                 case 4 -> handleBorrowBook();
                 case 5 -> handleReturnLatestBorrowed();
-                case 6 -> handleViewLendingRecords();
-                case 7 -> library.viewHistory();
-                case 8 -> {
+                case 6 -> handleReturnSpecificBorrowedBook();
+                case 7 -> handleViewLendingRecords();
+                case 8 -> library.viewHistory();
+                case 9 -> {
                     System.out.println("Exiting program.");
                     running = false;
                 }
-                default -> System.out.println("Invalid option. Please choose 1-8.");
+                default -> System.out.println("Invalid option. Please choose 1-9.");
             }
         }
     }
@@ -71,9 +72,10 @@ public class Main {
         System.out.println("3. Search Book");
         System.out.println("4. Borrow Book");
         System.out.println("5. Return Latest Borrowed Book");
-        System.out.println("6. View Lending Records");
-        System.out.println("7. View Borrowing History");
-        System.out.println("8. Exit");
+        System.out.println("6. Return Specific Borrowed Book (by ISBN)");
+        System.out.println("7. View Lending Records");
+        System.out.println("8. View Borrowing History");
+        System.out.println("9. Exit");
     }
 
     /** Gather input and add a book to catalogue. */
@@ -100,7 +102,15 @@ public class Main {
             return;
         }
 
-        System.out.println("Book found: " + book);
+        System.out.println("Book Found:");
+        System.out.println("+----------+--------------------------------------+------------------------+");
+        System.out.printf("| %-8s | %-36s | %-22s |%n", "ISBN", "Title", "Author");
+        System.out.println("+----------+--------------------------------------+------------------------+");
+        System.out.printf("| %8d | %-36.36s | %-22.22s |%n",
+                book.getIsbn(),
+                book.getTitle(),
+                book.getAuthor());
+        System.out.println("+----------+--------------------------------------+------------------------+");
     }
 
     /**
@@ -141,12 +151,18 @@ public class Main {
         String userId = readNonEmptyLine("Enter borrower ID: ");
         int lendPeriodDays = readPositiveInt("Enter lending period in days: ");
 
+        Book targetBook = library.searchBook(isbn);
+        if (targetBook == null) {
+            System.out.println("Borrow failed. Book not found in catalogue.");
+            return;
+        }
+
         boolean borrowed = library.borrowBook(isbn, userName, userId, lendPeriodDays);
 
         if (borrowed) {
             System.out.println("Book borrowed and moved to history stack.");
         } else {
-            System.out.println("Borrow failed. Book not found, invalid lending period, or user/name ID mismatch.");
+            System.out.println("Borrow failed. Borrower name and ID do not match registered user records.");
         }
     }
 
@@ -214,6 +230,32 @@ public class Main {
                     borrowerId);
             System.out.println("+----------+--------------------------------------+------------------------+----------------+----------+");
         }
+    }
+
+    /** Return a specific borrowed book by ISBN and display borrower details. */
+    private void handleReturnSpecificBorrowedBook() {
+        int isbn = readInt("Enter ISBN to return: ");
+        Book returned = library.returnBookByIsbn(isbn);
+        if (returned == null) {
+            System.out.println("Return failed. This ISBN is not currently borrowed.");
+            return;
+        }
+
+        LendingRecord returnedRecord = findLatestReturnedRecord(returned.getIsbn());
+        String borrowerName = (returnedRecord == null) ? "Unknown" : returnedRecord.getUserName();
+        String borrowerId = (returnedRecord == null) ? "Unknown" : returnedRecord.getUserId();
+
+        System.out.println("Specific Book Returned Successfully!");
+        System.out.println("+----------+--------------------------------------+------------------------+----------------+----------+");
+        System.out.printf("| %-8s | %-36s | %-22s | %-14s | %-8s |%n", "ISBN", "Title", "Author", "Borrower", "User ID");
+        System.out.println("+----------+--------------------------------------+------------------------+----------------+----------+");
+        System.out.printf("| %8d | %-36.36s | %-22.22s | %-14.14s | %-8.8s |%n",
+                returned.getIsbn(),
+                returned.getTitle(),
+                returned.getAuthor(),
+                borrowerName,
+                borrowerId);
+        System.out.println("+----------+--------------------------------------+------------------------+----------------+----------+");
     }
 
     /** Find the most recent returned lending record for a given ISBN. */

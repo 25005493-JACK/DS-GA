@@ -65,6 +65,14 @@ public interface LibraryADT {
     Book returnLatestBorrowed();
 
     /**
+     * Return a specific borrowed book by ISBN.
+     *
+     * @param isbn target ISBN to return
+     * @return returned Book or null when not currently borrowed
+     */
+    Book returnBookByIsbn(int isbn);
+
+    /**
      * Print borrowing history in LIFO order.
      */
     void viewHistory();

@@ -30,6 +30,22 @@ class BorrowHistoryStack {
         return history.pop();
     }
 
+    /**
+     * Remove the most recent active borrowed book matching the given ISBN.
+     *
+     * @param isbn target ISBN
+     * @return removed book or null if not found in active stack
+     */
+    Book removeByIsbn(int isbn) {
+        for (int i = history.size() - 1; i >= 0; i--) {
+            Book book = history.get(i);
+            if (book.getIsbn() == isbn) {
+                return history.remove(i);
+            }
+        }
+        return null;
+    }
+
     /** Clear all history entries (used during startup rebuild). */
     void clear() {
         history.clear();
@@ -49,7 +65,7 @@ class BorrowHistoryStack {
             return;
         }
 
-        System.out.println("Borrowing History (Most recent first) [TABLE-V2]:");
+        System.out.println("Borrowing History (Most recent first)");
         System.out.println("+----+----------+--------------------------------------+------------------------+");
         System.out.printf("| %-2s | %-8s | %-36s | %-22s |%n", "No", "ISBN", "Title", "Author");
         System.out.println("+----+----------+--------------------------------------+------------------------+");

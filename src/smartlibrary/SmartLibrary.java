@@ -138,6 +138,27 @@ public class SmartLibrary implements LibraryADT {
     }
 
     /**
+     * Return a specific borrowed book by ISBN.
+     *
+     * Mechanism:
+     * - Remove matching book from active borrow stack
+     * - Put book back into catalogue
+     * - Mark latest active lending record for that ISBN as returned
+     * - Persist books and lendings
+     */
+    @Override
+    public Book returnBookByIsbn(int isbn) {
+        Book returned = borrowHistory.removeByIsbn(isbn);
+        if (returned != null) {
+            catalogue.insert(returned);
+            markLatestActiveLendingReturned(returned.getIsbn());
+            persistBooks();
+            persistLendings();
+        }
+        return returned;
+    }
+
+    /**
      * Print current borrow stack.
      */
     @Override
@@ -234,13 +255,13 @@ public class SmartLibrary implements LibraryADT {
     }
 
     /**
-     * Register a new user pair or validate existing mapping.
+     * Validate existing user pair.
      *
      * Rules:
      * - Same ID cannot map to different name
      * - Same name cannot map to different ID
      * - Existing exact pair is valid
-     * - New valid pair is added and persisted
+     * - Unknown pair is rejected (no auto-registration)
      */
     private boolean registerOrValidateUser(String userName, String userId) {
         String normalizedName = userName.trim();
@@ -266,10 +287,7 @@ public class SmartLibrary implements LibraryADT {
                 return true;
             }
         }
-
-        users.add(new LibraryUser(normalizedName, normalizedId));
-        persistUsers();
-        return true;
+        return false;
     }
 
     /**
