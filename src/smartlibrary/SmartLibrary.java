@@ -88,7 +88,7 @@ public class SmartLibrary implements LibraryADT {
             return false;
         }
 
-        if (!registerOrValidateUser(userName, userId)) {
+        if (!ValidateUser(userName, userId)) {
             return false;
         }
 
@@ -263,7 +263,7 @@ public class SmartLibrary implements LibraryADT {
      * - Existing exact pair is valid
      * - Unknown pair is rejected (no auto-registration)
      */
-    private boolean registerOrValidateUser(String userName, String userId) {
+    private boolean ValidateUser(String userName, String userId) {
         String normalizedName = userName.trim();
         String normalizedId = userId.trim();
 
