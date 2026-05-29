@@ -1,50 +1,40 @@
 package smartlibrary;
 
-/**
+/*
  * Ying Chen
- * Immutable domain model representing a single book entity.
- *
- * Book is intentionally immutable so once created, its key properties
- * (ISBN/title/author) do not change unexpectedly while it is stored in BST
- * or moved through borrowing history.
+ * Book Entity Class
+ * This class represents a single book object. 
+ * We made it immutable (using final variables) so that the book details 
+ * won't accidentally get changed when moving through the BST or Stack.
  */
+
 public class Book {
-    /** Unique key used by BST ordering and lookup. */
+    // Unique key for BST sorting and search
     private final int isbn;
-
-    /** Display title of the book. */
     private final String title;
-
-    /** Author name of the book. */
     private final String author;
 
-    /**
-     * Create a book instance.
-     */
+    // Constructor to initialize book details
     public Book(int isbn, String title, String author) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
     }
 
-    /** @return ISBN key */
+    // Getters
     public int getIsbn() {
         return isbn;
     }
 
-    /** @return title text */
     public String getTitle() {
         return title;
     }
 
-    /** @return author text */
     public String getAuthor() {
         return author;
     }
 
-    /**
-     * Readable summary for quick logging/debug output.
-     */
+    // To display book info nicely in tables/logs
     @Override
     public String toString() {
         return "ISBN: " + isbn + " | Title: " + title + " | Author: " + author;
