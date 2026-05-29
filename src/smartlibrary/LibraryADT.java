@@ -2,92 +2,42 @@ package smartlibrary;
 
 import java.util.List;
 
-/**
+/*
  * Isaac
- * LibraryADT defines the public contract of the library system.
- *
- * This interface is used to enforce information hiding:
- * - UI layer (Main) talks only to this API.
- * - Internal implementations (BST, Stack, CSV) stay encapsulated.
+ * LibraryADT Interface
+ * This interface handles information hiding for our system.
+ * The UI layer (Main.java) only communicates with these abstract methods,
+ * keeping the actual BST, Stack, and CSV operations fully encapsulated.
  */
 public interface LibraryADT {
 
-    /**
-     * Add a new book into the catalogue.
-     *
-     * @param isbn unique book ISBN used as BST key
-     * @param title book title
-     * @param author book author
-     * @return true if inserted, false if ISBN already exists
-     */
+
     boolean addBook(int isbn, String title, String author);
 
-    /**
-     * Get all books sorted by ISBN (in-order BST traversal).
-     *
-     * @return immutable view of all books
-     */
+    // Returns a list of all books sorted by ISBN using in-order tree traversal
     List<Book> getAllBooks();
 
-    /**
-     * Search a book by ISBN using BST recursive search.
-     *
-     * @param isbn target ISBN
-     * @return matched Book or null if not found
-     */
+    // Searches for a book by its ISBN using recursive tree search
     Book searchBook(int isbn);
 
-    /**
-     * Borrow a book with default borrower metadata.
-     * Kept for backward compatibility.
-     *
-     * @param isbn target ISBN
-     * @return true if borrow success
-     */
+    // Basic borrow method for backward compatibility
     boolean borrowBook(int isbn);
 
-    /**
-     * Borrow a book with complete borrower details.
-     *
-     * @param isbn target ISBN
-     * @param userName borrower name
-     * @param userId borrower id
-     * @param lendPeriodDays borrowing period (days)
-     * @return true if borrow success
-     */
+    // Main borrow method that takes full borrower details and lending period
     boolean borrowBook(int isbn, String userName, String userId, int lendPeriodDays);
 
-    /**
-     * Return the latest borrowed book (LIFO from stack).
-     *
-     * @return returned Book or null when no active borrowed item
-     */
+    // Returns the most recently borrowed book (LIFO pop from stack)
     Book returnLatestBorrowed();
 
-    /**
-     * Return a specific borrowed book by ISBN.
-     *
-     * @param isbn target ISBN to return
-     * @return returned Book or null when not currently borrowed
-     */
+    // Returns a specific borrowed book by searching for its ISBN in the stack
     Book returnBookByIsbn(int isbn);
 
-    /**
-     * Print borrowing history in LIFO order.
-     */
+    // Prints out the borrowing history stack in LIFO order
     void viewHistory();
 
-    /**
-     * Quick check if catalogue is empty.
-     *
-     * @return true when catalogue has no books
-     */
     boolean isCatalogueEmpty();
 
-    /**
-     * Get all lending transaction records.
-     *
-     * @return immutable view of lending records
-     */
+    // Gets the full list of lending transaction logs from the CSV file
     List<LendingRecord> getLendingRecords();
 }
+
